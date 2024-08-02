@@ -15,13 +15,15 @@ datadir = os.path.join(basedir, 'data')
 if not os.path.exists(datadir):
     os.makedirs(datadir)
 
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class Config:
     """
     Define Config class with development environment (Sqlite)
     or production environment (Postgresql)
     """
+    ENV = os.environ.get('FLASK_ENV', 'development')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     if os.environ.get('FLASK_ENV') == 'production':
         load_dotenv('.env.prod')
         usr = os.environ.get('USERNAME')

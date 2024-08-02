@@ -30,6 +30,8 @@ class Place(BaseModel):
                                 nullable=False)
     max_guests = db.Column(db.Integer,
                             nullable=False)
+    image_path = db.Column(db.String(256),
+                        nullable=True)
     # Foreignkey definition
     amenity_ids = db.Column(db.String(36),
                         db.ForeignKey('amenities.id'),
@@ -40,6 +42,8 @@ class Place(BaseModel):
     city_id = db.Column(db.String(36),
                         db.ForeignKey('cities.id'),
                         nullable=False)
+    image_path = db.Column(db.String(256),
+                        nullable=True)
     # 1 to 1 relationship with User
     host = db.relationship('User',
                            back_populates='place')

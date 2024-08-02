@@ -1,0 +1,19 @@
+<header>
+    <div class="container">
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="HBNB Logo">
+        </a>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                {% if current_user %}
+                    <li><a href="#" id="logoutLink">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+<script src="{{ url_for('static', filename='js/logout.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/login.js') }}" defer></script>

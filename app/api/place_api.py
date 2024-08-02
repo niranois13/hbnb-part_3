@@ -1,14 +1,22 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app as app
 from models.place import Place
 from persistence.datamanager import DataManager
 from config import Config, db
 from sqlalchemy.orm import sessionmaker
 from flask_jwt_extended import jwt_required, get_jwt_identity
+import os
+from werkzeug.utils import secure_filename
 
 Session = sessionmaker(bind=Config.engine)
 session = Session()
 
 place_api = Blueprint("place_api", __name__)
+
+def allowed_file(filename):
+    """
+    Function to control if imaes added to places are in an allowed format
+    """
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 @place_api.route("/places", methods=["POST"])
@@ -19,6 +27,20 @@ def create_place():
     :Returns: jsonify + message + error/success code.
     """
     current_user = get_jwt_identity()
+    if 'image' not in request.files:
+        return jsonify({"Error": "No image file provided"}), 400
+
+    image_file = request.files['image']
+    if image_file.filename == '':
+        return jsonify({"Error": "No selected file"}), 400
+
+    if not allowed_file(image_file.filename):
+        return jsonify({"Error": "File type not allowed"}), 400
+
+    filename = secure_filename(image_file.filename)
+    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    image_file.save(image_path)
+
     place_data = request.get_json()
     if not place_data:
         return jsonify({"Error": "Problem during place creation"})

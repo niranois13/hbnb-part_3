@@ -5,7 +5,7 @@ from .base_model import BaseModel
 from config import db
 from flask_bcrypt import Bcrypt
 
-bcrypt = Bcrypt(None)
+bcrypt = Bcrypt()
 
 
 class User(BaseModel):
@@ -35,6 +35,7 @@ class User(BaseModel):
                               back_populates='user',
                               cascade='all, delete-orphan')
 
+    @staticmethod
     def set_password(password):
         """
         Sets the password hash for the user
@@ -42,6 +43,8 @@ class User(BaseModel):
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         return password_hash
 
+
+    @staticmethod
     def check_password(password_hash, password):
         """
         Check the password hash for the user

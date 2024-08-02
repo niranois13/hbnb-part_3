@@ -33,6 +33,9 @@ def add_user():
     if not all(c.isascii() for c in last_name) or not first_name.isalpha():
         return jsonify({"Error": "Last name must contain only ascii characters."}), 400
 
+    if len(password) < 6:
+        return jsonify({'error': 'Password must be at least 6 characters long!'}), 400
+
     is_email_valid = validate_email(email)
     if not is_email_valid:
         return jsonify({"Error": "Email not valid"}), 400
